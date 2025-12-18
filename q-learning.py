@@ -160,7 +160,7 @@ loss_fn = nn.MSELoss()
 for episode in range(num_episodes):
     # reset env
     state0, _= env.reset()
-    state0 = torch.tensor(state0)
+    state0 = torch.tensor(state0).to(device)
     episode_loss = 0
     episode_reward = 0
     episode_step = 0

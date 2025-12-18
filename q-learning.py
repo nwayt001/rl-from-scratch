@@ -204,7 +204,7 @@ for episode in range(num_episodes):
             # get max q-value of next step
             next_q_vals = q_target_network(s1_batch).max(dim=1, keepdim=True)[0]
 
-            y_target = r_batch + (gamma * next_q_vals * (1 - done_batch))
+            y_target = r_batch + (gamma * next_q_vals * (1 - done_batch.unsqueeze(1)))
 
         #predicted q-values
         q_network.train()

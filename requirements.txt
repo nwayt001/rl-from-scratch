@@ -1,0 +1,6 @@
+gymnasium
+stable_baselines3
+torch
+torchvision
+pygame
+torchinfo

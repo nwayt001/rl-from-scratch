@@ -171,7 +171,7 @@ for episode in range(num_episodes):
             a = random.randint(0, env.action_space.n - 2)  # take random action
         else:
             q_network.eval()
-            a = q_network(state0.unsqueeze(0)).detach().numpy().argmax() # choose action using our q-network
+            a = q_network(state0.unsqueeze(0)).detach().cpu().numpy().argmax() # choose action using our q-network
 
         # execute action in environment
         state1, reward, done, truncated, info= env.step(a)

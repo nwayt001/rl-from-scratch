@@ -220,7 +220,7 @@ for episode in range(num_episodes):
 
         steps = steps + 1 # increment our global step counter
         episode_step += 1 # increment our episode step counter
-        episode_loss += loss.detach().numpy()
+        episode_loss += loss.item()
         episode_reward += reward
         # update target q network
         if (steps % update_freq == 0):

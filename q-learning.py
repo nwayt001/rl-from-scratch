@@ -92,7 +92,7 @@ done_buffer = deque(maxlen = buffer_length)
 env = gym.make(environment, render_mode = "human")
 pygame.init()
 state0, _ = env.reset()
-state0 = torch.tensor(state0)
+state0 = torch.tensor(state0).to(device)
 
 # Warm start with either human demonstrations on random actions
 for i in range(warm_start):
@@ -116,7 +116,7 @@ for i in range(warm_start):
 
     # env step
     state1, reward, done, _, _ = env.step(a)
-    state1 = torch.tensor(state1)
+    state1 = torch.tensor(state1).to(device)
 
     # save human experience to replay buffer
     state0_buffer.append(state0)
@@ -125,11 +125,11 @@ for i in range(warm_start):
     reward_buffer.append(reward)
     done_buffer.append(int(done))
 
-    state0 = state1.detach().clone()
+    state0 = state1.detach().clone().to(device)
 
     if done:
         state0, _ = env.reset()
-        state0 = torch.tensor(state0)
+        state0 = torch.tensor(state0).to(device)
 
 env.close()
 

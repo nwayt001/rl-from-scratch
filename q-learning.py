@@ -34,6 +34,14 @@ buffer_length = 10000
 warm_start = 100
 human_demo = False
 
+# cuda availablity
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    print("CUDA is available, using GPU")
+else:
+    device = torch.device("cpu")
+    print("Using CPU")
+
 # create a simple neural network for the q-learner
 class Q_network_v1(nn.Module):
     def __init__(self, input_size, num_actions, num_hidden):
@@ -138,8 +146,8 @@ env = gym.make(environment)
 pygame.init() # for keypress
 
 # initialize q-network
-q_network = Q_network(env.observation_space.shape[0], env.action_space.n, num_hidden_units)
-q_target_network = Q_network(env.observation_space.shape[0], env.action_space.n, num_hidden_units)
+q_network = Q_network(env.observation_space.shape[0], env.action_space.n, num_hidden_units).to(device)
+q_target_network = Q_network(env.observation_space.shape[0], env.action_space.n, num_hidden_units).to(device)
 
 # visualize network architechture. 
 summary(q_network, input_size=env.observation_space.shape)
@@ -184,11 +192,11 @@ for episode in range(num_episodes):
         r_batch = [reward_buffer[i] for i in idxs]
         done_batch = [done_buffer[i] for i in idxs]
 
-        s0_batch = torch.stack(s0_batch, dim=0)
-        a_batch = torch.tensor(a_batch).unsqueeze(dim=1)
-        s1_batch = torch.stack(s1_batch, dim=0)
-        r_batch = torch.tensor(r_batch).unsqueeze(dim=1)
-        done_batch = torch.tensor(done_batch)
+        s0_batch = torch.stack(s0_batch, dim=0).to(device)
+        a_batch = torch.tensor(a_batch).unsqueeze(dim=1).to(device)
+        s1_batch = torch.stack(s1_batch, dim=0).to(device)
+        r_batch = torch.tensor(r_batch).unsqueeze(dim=1).to(device)
+        done_batch = torch.tensor(done_batch).to(device)
 
         # compute loss, perform a gradient update (backwards step)
         # target q-values

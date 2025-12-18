@@ -177,7 +177,7 @@ for episode in range(num_episodes):
         state1, reward, done, truncated, info= env.step(a)
 
         # store the experience tuple in a replay buffer
-        state1 = torch.tensor(state1)
+        state1 = torch.tensor(state1).to(device)
         state0_buffer.append(state0)
         state1_buffer.append(state1)
         action_buffer.append(a)
@@ -227,7 +227,8 @@ for episode in range(num_episodes):
             q_target_network.load_state_dict(q_network.state_dict())
 
         # make the new state be the old state
-        state0 = state1.detach().clone()
+        state0 = state1.detach().clone().to(device)
+        
 
         # check for user to quit and save weights.
         keys = pygame.key.get_pressed()
